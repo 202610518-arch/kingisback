@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>제미니 페퍼스 고스트 홀로그램</title>
+  <style>
+    :root {
+      /* 초기 크기 및 거리 설정 */
+      --size: 26vmin;
+      --offset: 14vmin;
+      /* 제미니의 시그니처 컬러: 신비로운 블루-퍼플 그라데이션 글로우 */
+      --glow-color: rgba(147, 51, 234, 0.5); 
+      --glow-secondary: rgba(59, 130, 246, 0.6);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000; /* 홀로그램 반사 극대화를 위한 완전 블랙 */
+      color: #fff;
+      overflow: hidden;
+      font-family: 'Pretendard', -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* 사이버펑크 제어 패널 */
+    #controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(10, 15, 30, 0.85);
+      padding: 15px 20px;
+      border-radius: 12px;
+      z-index: 10;
+      opacity: 0.3;
+      transition: opacity 0.3s ease, border-color 0.3s;
+      border: 1px solid #3b82f6;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+    }
+
+    #controls:hover, #controls:focus-within {
+      opacity: 1;
+      border-color: #a855f7;
+    }
+
+    .control-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #93c5fd;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="range"] {
+      width: 160px;
+      accent-color: #3b82f6;
+      cursor: pointer;
+    }
+
+    button {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      width: 100%;
+      font-weight: bold;
+      transition: transform 0.1s, filter 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+    }
+
+    button:hover {
+      filter: brightness(1.15);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+    }
+    
+    button:active {
+      transform: scale(0.97);
+    }
+
+    /* 피라미드 중앙 가이드 마커 */
+    .center-marker {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(147, 51, 234, 0.3);
+      font-size: 28px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* 홀로그램 4면 컨테이너 */
+    .hologram-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .face {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--size);
+      height: var(--size);
+      margin-top: calc(var(--size) / -2);
+      margin-left: calc(var(--size) / -2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      filter: drop-shadow(0 0 12px var(--glow-color)) drop-shadow(0 0 4px var(--glow-secondary));
+      will-change: transform;
+    }
+
+    /* 4면 배치: 캐릭터 발(아래쪽)이 항상 중앙을 향하도록 설정 */
+    .top { transform: translateY(calc(-1 * var(--offset))) rotate(0deg); }
+    .bottom { transform: translateY(var(--offset)) rotate(180deg); }
+    .left { transform: translateX(calc(-1 * var(--offset))) rotate(-90deg); }
+    .right { transform: translateX(var(--offset)) rotate(90deg); }
+
+    /* SVG 애니메이션 */
+    .gemini-svg {
+      width: 100%;
+      height: 100%;
+      animation: cyberFloat 4s ease-in-out infinite;
+    }
+
+    /* 우주 공간을 유영하듯 위아래/살짝 회전하는 부드러운 애니메이션 */
+    @keyframes cyberFloat {
+      0%, 100% { 
+        transform: translateY(0) rotate(0deg) scale(0.98); 
+      }
+      50% { 
+        transform: translateY(-5%) rotate(1.5deg) scale(1.02); 
+      }
+    }
+
+    /* 디지털 궤도 회전 애니메이션 */
+    .orbit {
+      transform-origin: center;
+      animation: orbitRotate 10s linear infinite;
+    }
+    .orbit-reverse {
+      transform-origin: center;
+      animation: orbitRotateRev 8s linear infinite;
+    }
+
+    @keyframes orbitRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes orbitRotateRev {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    /* 데이터 입자 반짝임 */
+    .node {
+      animation: pulse 2s infinite ease-in-out;
+      transform-origin: center;
+    }
+    .node-1 { animation-delay: 0s; }
+    .node-2 { animation-delay: 0.7s; }
+    .node-3 { animation-delay: 1.4s; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.7); opacity: 0.3; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* AI LED 페이스 깜빡임 애니메이션 */
+    .ai-face {
+      animation: ledPulse 4s infinite ease-in-out;
+    }
+
+    @keyframes ledPulse {
+      0%, 45%, 55%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0.2; transform: scaleY(0.1); } /* 가끔 눈을 깜빡이듯 스캔함 */
+    }
+
+    /* 제미니 핵심 스파크(Sparkle) 로고 발광 */
+    .gemini-sparkle {
+      animation: sparkleGlow 3s infinite ease-in-out;
+    }
+
+    @keyframes sparkleGlow {
+      0%, 100% { filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 10px #93c5fd); opacity: 0.8; }
+      50% { filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 20px #a855f7); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 컨트롤 패널 -->
+  <div id="controls">
+    <div class="control-group">
+      <label for="size">제미니 크기</label>
+      <input type="range" id="size" min="15" max="45" value="26">
+    </div>
+    <div class="control-group">
+      <label for="offset">중앙에서의 거리</label>
+      <input type="range" id="offset" min="2" max="35" value="14">
+    </div>
+    <button id="fullscreenBtn">전체 화면 시작</button>
+  </div>
+
+  <div class="center-marker">✦</div>
+
+  <!-- 홀로그램 4면 -->
+  <div class="hologram-container">
+    <div class="face top"></div>
+    <div class="face bottom"></div>
+    <div class="face left"></div>
+    <div class="face right"></div>
+  </div>
+
+  <script>
+    // 제미니 AI 어시스턴트 로봇 SVG 디자인
+    // 귀여운 구체형 헬멧, 스캔 화면, 궤도 고리, 그리고 손 위에 띄운 상징적인 제미니 스파크 로고
+    const geminiSVG = `
+      <svg viewBox="0 0 200 200" class="gemini-svg">
+        <defs>
+          <!-- 우주적인 색상의 그라데이션 정의 -->
+          <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="100%" stop-color="#8b5cf6" />
+          </linearGradient>
+          <linearGradient id="visorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a" />
+            <stop offset="100%" stop-color="#1e1b4b" />
+          </linearGradient>
+          <linearGradient id="geminiSparkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#93c5fd" />
+            <stop offset="50%" stop-color="#c084fc" />
+            <stop offset="100%" stop-color="#fdba74" />
+          </linearGradient>
+        </defs>
+
+        <!-- 배경 디지털 연출 (공전 고리 및 데이터 노드) -->
+        <g id="digital-space">
+          <!-- 디지털 안쪽 궤도 고리 (사선) -->
+          <ellipse cx="100" cy="115" rx="75" ry="25" fill="none" stroke="#3b82f6" stroke-width="1" stroke-dasharray="8,6" opacity="0.6" class="orbit" />
+          
+          <!-- 디지털 바깥쪽 궤도 고리 (반대 방향) -->
+          <ellipse cx="100" cy="115" rx="90" ry="15" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="15,10" opacity="0.4" class="orbit-reverse" />
+
+          <!-- 부유하는 데이터 입자들 -->
+          <circle cx="35" cy="80" r="3" fill="#60a5fa" class="node node-1" />
+          <line x1="35" y1="80" x2="45" y2="70" stroke="#60a5fa" stroke-width="0.5" opacity="0.5" class="node node-1"/>
+          
+          <circle cx="165" cy="130" r="2.5" fill="#c084fc" class="node node-2" />
+          <line x1="165" y1="130" x2="155" y2="140" stroke="#c084fc" stroke-width="0.5" opacity="0.5" class="node node-2"/>
+
+          <circle cx="50" cy="150" r="2" fill="#38bdf8" class="node node-3" />
+        </g>
+
+        <!-- 제미니 AI 캐릭터 바디 -->
+        <g id="gemini-bot">
+          <!-- 떠다니는 추진 이펙트 (하단 파란 불꽃) -->
+          <path d="M 90 145 Q 100 170 100 170 Q 100 170 110 145 Z" fill="url(#bodyGrad)" opacity="0.8" />
+          <path d="M 95 145 Q 100 160 100 160 Q 100 160 105 145 Z" fill="#67e8f9" opacity="0.9" />
+
+          <!-- 귀여운 사이드 부스터 날개 -->
+          <path d="M 60 115 C 45 110, 40 125, 55 130 Z" fill="url(#bodyGrad)" />
+          <path d="M 140 115 C 155 110, 160 125, 145 130 Z" fill="url(#bodyGrad)" />
+          
+          <!-- 로봇 메인 바디 (구형 하체) -->
+          <circle cx="100" cy="125" r="28" fill="url(#bodyGrad)" stroke="#1e1b4b" stroke-width="1.5" />
+          <!-- 바디 조명 라인 -->
+          <path d="M 75 125 Q 100 140 125 125" fill="none" stroke="#67e8f9" stroke-width="2" />
+          <circle cx="100" cy="134" r="3" fill="#67e8f9" />
+
+          <!-- 목 연결부 -->
+          <rect x="92" y="93" width="16" height="10" rx="3" fill="#1e1b4b" />
+          <rect x="94" y="95" width="12" height="6" rx="2" fill="#60a5fa" />
+
+          <!-- AI 헤드 (부드러운 둥근 헬멧 모양) -->
+          <rect x="62" y="50" width="76" height="54" rx="27" fill="url(#bodyGrad)" stroke="#1e1b4b" stroke-width="2" />
+          
+          <!-- 고글/바이저 디스플레이 (얼굴 화면) -->
+          <rect x="68" y="55" width="64" height="42" rx="18" fill="url(#visorGrad)" />
+          
+          <!-- 미래형 LED 페이스 (깜빡이는 눈망울과 데이터 물결) -->
+          <g class="ai-face">
+            <!-- 왼쪽 안테나 라이트 -->
+            <ellipse cx="85" cy="74" rx="4" ry="7" fill="#67e8f9" />
+            <circle cx="85" cy="74" r="1.5" fill="#fff" />
+            
+            <!-- 오른쪽 안테나 라이트 -->
+            <ellipse cx="115" cy="74" rx="4" ry="7" fill="#67e8f9" />
+            <circle cx="115" cy="74" r="1.5" fill="#fff" />
+
+            <!-- 부드러운 미소 라인 -->
+            <path d="M 94 83 Q 100 87 106 83" fill="none" stroke="#67e8f9" stroke-width="2" stroke-linecap="round" />
+          </g>
+
+          <!-- 헬멧 안테나 (상단 데이터 수신기) -->
+          <line x1="100" y1="50" x2="100" y2="40" stroke="#1e1b4b" stroke-width="3.5" />
+          <circle cx="100" cy="38" r="4.5" fill="#67e8f9" />
+
+          <!-- 양손 홀로그램 데이터 수집 모션 -->
+          <!-- 왼손 -->
+          <circle cx="65" cy="135" r="4" fill="#1e1b4b" />
+          <circle cx="65" cy="135" r="2.5" fill="#67e8f9" />
+          <!-- 오른손 -->
+          <circle cx="135" cy="135" r="4" fill="#1e1b4b" />
+          <circle cx="135" cy="135" r="2.5" fill="#67e8f9" />
+
+          <!-- ★ 제미니 메인 스파크 로고 (중앙에서 신비롭게 반짝임) ★ -->
+          <!-- 양손 중앙 위에서 회전하며 빛나는 형태 -->
+          <g id="gemini-main-spark" class="gemini-sparkle">
+            <!-- 시그니처 4각 별 모양 패스 생성 -->
+            <!-- 중앙 좌표는 (100, 110) 부근 -->
+            <path d="M 100 97 C 100 110, 100 110, 113 110 C 100 110, 100 110, 100 123 C 100 110, 100 110, 87 110 C 100 110, 100 110, 100 97 Z" fill="url(#geminiSparkGrad)" />
+            
+            <!-- 보조 작은 별 (우측 상단) -->
+            <path d="M 115 101 C 115 106, 115 106, 120 106 C 115 106, 115 106, 115 111 C 115 106, 115 106, 110 106 C 115 106, 115 106, 115 101 Z" fill="#93c5fd" opacity="0.8" />
+          </g>
+        </g>
+      </svg>
+    `;
+
+    // 4면에 제미니 로봇 SVG 투입
+    document.querySelectorAll('.face').forEach(face => {
+      face.innerHTML = geminiSVG;
+    });
+
+    // 슬라이더 및 제어 인터랙션
+    const root = document.documentElement;
+    const sizeInput = document.getElementById('size');
+    const offsetInput = document.getElementById('offset');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    sizeInput.addEventListener('input', (e) => {
+      root.style.setProperty('--size', e.target.value + 'vmin');
+    });
+
+    offsetInput.addEventListener('input', (e) => {
+      root.style.setProperty('--offset', e.target.value + 'vmin');
+    });
+
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+          console.log(`전체화면 오류: ${err.message}`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
